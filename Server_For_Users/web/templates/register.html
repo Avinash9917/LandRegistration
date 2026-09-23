@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}Citizen Registration - LandRegistry DApp{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+      
+      <!-- Registration Card -->
+      <div class="dapp-card p-4 p-md-5">
+        <div class="text-center mb-4">
+          <div class="stat-icon primary mx-auto mb-3">
+            <i class="fa-solid fa-id-card"></i>
+          </div>
+          <h3 class="fw-bold mb-1">Citizen Registration</h3>
+          <p class="text-muted small">Bind your Web3 wallet address to your verified identity</p>
+        </div>
+
+        <!-- Privacy Assurance Banner -->
+        <div class="alert alert-success d-flex align-items-center gap-3 py-2 px-3 mb-4 rounded-3 border-success-subtle">
+          <i class="fa-solid fa-lock text-success fs-4"></i>
+          <div class="small">
+            <strong>Privacy Guard:</strong> Your Aadhaar number is encrypted (AES-256 GCM) off-chain. Only a salted Keccak256 hash is anchored on the blockchain.
+          </div>
+        </div>
+
+        <form onsubmit="registerUser(event)">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="firstName" class="dapp-label">First Name</label>
+              <input type="text" class="dapp-input" id="firstName" placeholder="e.g. John" required>
+            </div>
+
+            <div class="col-md-6">
+              <label for="lastName" class="dapp-label">Last Name</label>
+              <input type="text" class="dapp-input" id="lastName" placeholder="e.g. Doe" required>
+            </div>
+
+            <div class="col-12">
+              <label for="dob" class="dapp-label">Date of Birth</label>
+              <input type="date" class="dapp-input" id="dob" required>
+            </div>
+
+            <div class="col-12">
+              <label for="aadharNo" class="dapp-label">
+                Aadhaar Number <span class="text-muted fw-normal">(12 digits)</span>
+              </label>
+              <div class="input-group">
+                <input type="text" class="dapp-input" id="aadharNo" placeholder="1234 5678 9012" maxlength="14" required>
+              </div>
+              <small class="text-muted">Zero plaintext storage on blockchain.</small>
+            </div>
+
+            <!-- Phase 9: Phone Number (Mandatory) & Email (Optional) -->
+            <div class="col-12">
+              <label for="phoneNumber" class="dapp-label">
+                Mobile Phone Number <span class="text-danger">*</span> <span class="text-muted fw-normal">(For real-time SMS alerts)</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-light text-muted small">+91</span>
+                <input type="tel" class="form-control dapp-input" id="phoneNumber" placeholder="9876543210" maxlength="10" required>
+                <button type="button" class="btn btn-outline-primary" id="sendOtpBtn" onclick="requestPhoneOtp()">
+                  <i class="fa-solid fa-paper-plane me-1"></i> Send OTP
+                </button>
+              </div>
+              <small class="text-muted">You will receive SMS notifications for deed verifications & purchase offers.</small>
+            </div>
+
+            <!-- OTP Verification Container (Hidden until OTP is sent) -->
+            <div class="col-12" id="otpSection" style="display: none;">
+              <div class="p-3 bg-light border rounded-3">
+                <label for="otpCode" class="dapp-label text-primary">
+                  <i class="fa-solid fa-shield-halved me-1"></i> Enter 6-Digit SMS Verification Code
+                </label>
+                <div class="input-group mb-2">
+                  <input type="text" class="form-control dapp-input text-center fw-bold fs-5 letter-spacing-2" id="otpCode" placeholder="••••••" maxlength="6">
+                  <button type="button" class="btn btn-success" id="verifyOtpBtn" onclick="submitPhoneOtp()">
+                    <i class="fa-solid fa-check me-1"></i> Verify OTP
+                  </button>
+                </div>
+                <div id="otpStatusNotice" class="small text-muted"></div>
+              </div>
+            </div>
+
+            <!-- Optional Email Address -->
+            <div class="col-12">
+              <label for="emailAddress" class="dapp-label">
+                Email Address <span class="badge bg-secondary-subtle text-secondary fw-normal ms-1">Optional</span>
+              </label>
+              <input type="email" class="dapp-input" id="emailAddress" placeholder="e.g. citizen@domain.com">
+            </div>
+
+            <div class="col-12 mt-4">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                <label class="form-check-label text-muted small" for="termsCheck">
+                  I agree that this identity and verified phone number will be securely linked to my connected MetaMask address.
+                </label>
+              </div>
+            </div>
+
+            <div class="col-12 mt-4 d-flex gap-3">
+              <a href="/" class="btn btn-outline-secondary w-50 py-2">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back
+              </a>
+              <button type="submit" class="btn btn-dapp-primary w-50 py-2 justify-content-center" id="registerBtn">
+                <i class="fa-solid fa-signature"></i> Register On-Chain
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="/js/register.js"></script>
+<script>
+  window.addEventListener('load', () => {
+    checkConnection();
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}My Active Sales & Listings - LandRegistry DApp{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Sales Header -->
+  <div class="dapp-card p-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h3 class="fw-bold mb-1"><i class="fa-solid fa-tags text-primary me-2"></i>My Listed Properties</h3>
+        <p class="text-muted small mb-0">Manage your active sales listings and review incoming purchase requests.</p>
+      </div>
+      <a href="/dashboard" class="btn btn-outline-primary">
+        <i class="fa-solid fa-plus me-1"></i> List Another Property
+      </a>
+    </div>
+  </div>
+
+  <!-- Listings Table -->
+  <div id="salesTable" class="dapp-card p-4">
+    <div class="table-responsive">
+      <table class="dapp-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Sale ID</th>
+            <th>Property ID</th>
+            <th>Listed Price</th>
+            <th>Accepted Buyer</th>
+            <th>Escrow State</th>
+            <th>Buyer Offers</th>
+            <th>Manage</th>
+          </tr>
+        </thead>
+        <tbody id="salesTableBody">
+          <tr>
+            <td colspan="8" class="text-center py-5 text-muted">
+              <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+              Loading your property sales listings...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Incoming Buyer Offers Drawer (Hidden by default) -->
+  <div id="requestedUsersOfaSale" class="dapp-card p-4 mt-4" style="display: none;">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+      <div>
+        <h4 class="fw-bold mb-1"><i class="fa-solid fa-users text-primary me-2"></i>Incoming Purchase Requests</h4>
+        <p class="text-muted small mb-0">Bidders for Property <span id="propertyId" class="badge bg-primary-subtle text-primary border"></span></p>
+      </div>
+      <button class="btn btn-sm btn-outline-secondary" onclick="toggleSalesAndRequestedUsersTables()">
+        <i class="fa-solid fa-arrow-left me-1"></i> Back to My Sales
+      </button>
+    </div>
+
+    <div class="table-responsive">
+      <table class="dapp-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Buyer Address</th>
+            <th>Offered Price</th>
+            <th>Offer Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="requestedUsersOfaSaleTableBody">
+          <tr>
+            <td colspan="5" class="text-center py-4 text-muted">Loading buyer offers...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="/js/mySales.js"></script>
+<script>
+  window.addEventListener('load', () => {
+    checkConnection();
+  });
+</script>
+{% endblock %}

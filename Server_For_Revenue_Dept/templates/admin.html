@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Console - Revenue Department</title>
+
+  <!-- Modern Bootstrap 5 & FontAwesome Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Modern DApp CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/modern_dapp.css') }}">
+
+  <!-- Core Web3 Scripts -->
+  <script src="{{ url_for('static', filename='js/web3.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/contractsDetails.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</head>
+
+<body class="bg-light">
+
+  <!-- Top Navigation Bar -->
+  <nav class="dapp-navbar">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <a class="brand" href="/admin">
+        <i class="fa-solid fa-user-shield text-warning"></i>
+        <div>
+          <span>RevenueDept</span><small class="text-warning-emphasis ms-1 fw-light" style="font-size: 0.75rem;">Super Admin</small>
+        </div>
+      </a>
+
+      <div class="d-flex align-items-center gap-3">
+        <a href="/" class="btn btn-sm btn-outline-light">
+          <i class="fa-solid fa-user-tie me-1"></i> Officer Portal
+        </a>
+        <a class="btn btn-sm btn-outline-danger" href="/logout" title="Logout">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Global Alert -->
+  <div class="container mt-3">
+    <div id="notifyUser" class="alert alert-info shadow-sm" style="display: none; border-radius: var(--radius-sm);"></div>
+  </div>
+
+  <main class="container py-5">
+
+    <!-- Step 1: Connect Wallet -->
+    <div id="connectToBlockchainDiv" class="dapp-card mx-auto p-4 text-center" style="max-width: 460px;">
+      <div class="stat-icon primary mx-auto mb-3">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h4 class="fw-bold mb-2">Super Admin Authentication</h4>
+      <p class="text-muted small mb-4">Connect the contract deployer / admin wallet to manage revenue officers and circuit breakers.</p>
+      <button onclick="connectToBlockchain()" class="btn btn-dapp-primary w-100 py-3 justify-content-center">
+        <i class="fa-solid fa-wallet"></i> Connect Admin Wallet
+      </button>
+    </div>
+
+    <!-- Step 2: Password Login -->
+    <div id="passwordDiv" class="dapp-card mx-auto p-4" style="max-width: 460px; display: none;">
+      <div class="stat-icon warning mx-auto mb-3">
+        <i class="fa-solid fa-key"></i>
+      </div>
+      <h4 class="fw-bold mb-2 text-center">Enter Admin Key</h4>
+      <p class="text-muted small mb-4 text-center">Verify your administrative authorization.</p>
+      <div class="mb-3">
+        <label class="dapp-label" for="password">Admin Security Key</label>
+        <input type="password" class="dapp-input" id="password" value="12345678" placeholder="Enter Admin Password">
+      </div>
+      <button onclick="login()" class="btn btn-dapp-primary w-100 py-2 justify-content-center">
+        <i class="fa-solid fa-unlock"></i> Unlock Admin Console
+      </button>
+    </div>
+
+    <!-- Step 3: Admin Console Dashboard -->
+    <div id="dashboardDiv" style="display: none;">
+      <div class="row g-4">
+        
+        <!-- Onboard Officer Card -->
+        <div class="col-lg-7">
+          <div class="dapp-card p-4">
+            <div class="d-flex align-items-center gap-2 mb-3 pb-3 border-bottom">
+              <i class="fa-solid fa-user-plus text-primary fs-4"></i>
+              <div>
+                <h5 class="fw-bold mb-0">Onboard Revenue Officer</h5>
+                <small class="text-muted">Grant on-chain OFFICER_ROLE and map jurisdiction department code.</small>
+              </div>
+            </div>
+
+            <form onsubmit="addEmployee(event)">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label for="employeeWallet" class="dapp-label">Officer Wallet Address</label>
+                  <input type="text" class="dapp-input" id="employeeWallet" placeholder="0x..." required>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="firstname" class="dapp-label">First Name</label>
+                  <input type="text" class="dapp-input" id="firstname" placeholder="e.g. Ramesh" required>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="lastName" class="dapp-label">Last Name</label>
+                  <input type="text" class="dapp-input" id="lastName" placeholder="e.g. Kumar" required>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="revenueDeptId" class="dapp-label">Revenue Dept ID (Jurisdiction)</label>
+                  <input type="number" class="dapp-input" id="revenueDeptId" placeholder="e.g. 501" required>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="empPassword" class="dapp-label">Officer Portal Password</label>
+                  <input type="password" class="dapp-input" id="empPassword" value="12345678" required>
+                </div>
+
+                <div class="col-12 mt-4">
+                  <button type="submit" class="btn btn-dapp-primary w-100 py-2 justify-content-center">
+                    <i class="fa-solid fa-stamp"></i> Authorize & Map Officer On-Chain
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Emergency Circuit Breakers & Quick Controls -->
+        <div class="col-lg-5">
+          <div class="dapp-card p-4 mb-4">
+            <div class="d-flex align-items-center gap-2 mb-3 pb-3 border-bottom">
+              <i class="fa-solid fa-tower-broadcast text-danger fs-4"></i>
+              <div>
+                <h5 class="fw-bold mb-0">Emergency Circuit Breaker</h5>
+                <small class="text-muted">Pause all land registrations and transfers across contracts.</small>
+              </div>
+            </div>
+
+            <p class="text-muted small">
+              In case of detected exploits or court injunction, the admin can trigger OpenZeppelin Pausable circuit breakers.
+            </p>
+
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-danger w-50" onclick="pauseRegistry()">
+                <i class="fa-solid fa-pause me-1"></i> Pause Registry
+              </button>
+              <button class="btn btn-outline-success w-50" onclick="unpauseRegistry()">
+                <i class="fa-solid fa-play me-1"></i> Unpause Registry
+              </button>
+            </div>
+          </div>
+
+          <!-- Network Health -->
+          <div class="dapp-card p-4">
+            <h6 class="fw-bold mb-3"><i class="fa-solid fa-circle-nodes text-info me-2"></i>Network Overview</h6>
+            <div class="d-flex justify-content-between py-2 border-bottom small">
+              <span class="text-muted">Target Network:</span>
+              <span class="fw-bold">Ganache Local / Sepolia</span>
+            </div>
+            <div class="d-flex justify-content-between py-2 border-bottom small">
+              <span class="text-muted">Contract Standard:</span>
+              <span class="fw-bold">OpenZeppelin RBAC + ReentrancyGuard</span>
+            </div>
+            <div class="d-flex justify-content-between py-2 small">
+              <span class="text-muted">Oracle Service:</span>
+              <span class="badge bg-success-subtle text-success">MockBhoomi Oracle Active</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Loading Overlay -->
+  <div id="loadingDiv">
+    <div class="loading-content">
+      <div class="spinner-dapp"></div>
+      <h4 class="fw-bold mb-2">Executing Admin Transaction</h4>
+      <p class="text-white-50 mb-0">Confirming admin operation on blockchain...</p>
+    </div>
+  </div>
+
+</body>
+
+</html>
