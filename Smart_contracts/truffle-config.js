@@ -2,8 +2,9 @@
  * Truffle configuration file with Multi-network (Ganache, Sepolia, Polygon/Base L2) support
  */
 
+const path = require('path');
 try {
-  require('dotenv').config({ path: '../.env' });
+  require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 } catch (e) {
   // dotenv is optional in local test environments
 }
@@ -21,9 +22,13 @@ module.exports = {
     sepolia: {
       provider: () => {
         const HDWalletProvider = require('@truffle/hdwallet-provider');
-        const privateKey = process.env.DEPLOYER_PRIVATE_KEY || "0x0000000000000000000000000000000000000000000000000000000000000001";
-        const rpcUrl = process.env.SEPOLIA_RPC_URL || "https://rpc.sepolia.org";
-        return new HDWalletProvider(privateKey, rpcUrl);
+        let privateKey = process.env.DEPLOYER_PRIVATE_KEY || "0x0000000000000000000000000000000000000000000000000000000000000001";
+        if (!privateKey.startsWith("0x")) privateKey = "0x" + privateKey;
+        const rpcUrl = process.env.SEPOLIA_RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com";
+        return new HDWalletProvider({
+          privateKeys: [privateKey],
+          providerOrUrl: rpcUrl
+        });
       },
       network_id: 11155111,
       gas: 5500000,
