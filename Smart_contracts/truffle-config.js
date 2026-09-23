@@ -27,12 +27,13 @@ module.exports = {
         const rpcUrl = process.env.SEPOLIA_RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com";
         return new HDWalletProvider({
           privateKeys: [privateKey],
-          providerOrUrl: rpcUrl
+          providerOrUrl: rpcUrl,
+          pollingInterval: 10000
         });
       },
       network_id: 11155111,
       gas: 5500000,
-      confirmations: 2,
+      confirmations: 1,
       timeoutBlocks: 200,
       skipDryRun: true
     },
