@@ -14,6 +14,35 @@ async function connectToBlockchain() {
       window.localStorage.setItem("employeeId", officerAccount);
       window.employeeId = officerAccount;
 
+      // Ensure connected to Sepolia network (Chain ID 11155111 / 0xaa36a7)
+      const targetChainId = "0xaa36a7";
+      try {
+        const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+        if (currentChainId !== targetChainId) {
+          try {
+            await window.ethereum.request({
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: targetChainId }]
+            });
+          } catch (switchError) {
+            if (switchError.code === 4902) {
+              await window.ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [{
+                  chainId: targetChainId,
+                  chainName: 'Sepolia Testnet',
+                  nativeCurrency: { name: 'Sepolia ETH', symbol: 'ETH', decimals: 18 },
+                  rpcUrls: ['https://ethereum-sepolia-rpc.publicnode.com', 'https://1rpc.io/sepolia'],
+                  blockExplorerUrls: ['https://sepolia.etherscan.io']
+                }]
+              });
+            }
+          }
+        }
+      } catch (chainErr) {
+        console.warn("Chain switch check warning:", chainErr);
+      }
+
       if (connectBtn && typeof window.triggerParticleBurst === 'function') {
         window.triggerParticleBurst(connectBtn);
       }

@@ -22,7 +22,7 @@ MONGO_DB_URL = os.environ.get("MONGO_DB_URL", "mongodb://localhost:27017")
 SECRET_KEY = os.environ.get("SECRET_KEY_USER_PORTAL", "UserPortalSecret$123")
 
 # Connect to MongoDB
-client = MongoClient(MONGO_DB_URL)
+client = MongoClient(MONGO_DB_URL, serverSelectionTimeoutMS=4000)
 LandRegistryDB = client.LandRegistry
 fs = gridfs.GridFS(LandRegistryDB)
 propertyDocsTable = LandRegistryDB.Property_Docs

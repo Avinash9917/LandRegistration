@@ -28,7 +28,7 @@ adminPassword = os.environ.get("ADMIN_INITIAL_PASSWORD", config.get("Admin_Passw
 
 # Web3 and DB Connections
 web3 = Web3(HTTPProvider(GANACHE_URL))
-client = MongoClient(MONGO_DB_URL)
+client = MongoClient(MONGO_DB_URL, serverSelectionTimeoutMS=4000)
 LandRegistryDB = client.LandRegistry
 fs = gridfs.GridFS(LandRegistryDB)
 propertyDocsTable = LandRegistryDB.Property_Docs
@@ -80,14 +80,18 @@ def login():
     employeeId = request.form.get('employeeId', '').strip().lower()
     password = request.form.get('password', '')
 
-    user = employeesTable.find_one({
-        "$or": [
-            {"employeeWallet": employeeId},
-            {"employeeWallet": {"$regex": f"^{employeeId}$", "$options": "i"}},
-            {"employeeId": employeeId},
-            {"employeeId": {"$regex": f"^{employeeId}$", "$options": "i"}}
-        ]
-    })
+    user = None
+    try:
+        user = employeesTable.find_one({
+            "$or": [
+                {"employeeWallet": employeeId},
+                {"employeeWallet": {"$regex": f"^{employeeId}$", "$options": "i"}},
+                {"employeeId": employeeId},
+                {"employeeId": {"$regex": f"^{employeeId}$", "$options": "i"}}
+            ]
+        })
+    except Exception as db_err:
+        print(f"[Employees DB Warning]: {db_err}")
     if user and check_password_hash(user['password'], password):
         session['user_id'] = str(user['_id'])
         return jsonify({
@@ -233,12 +237,16 @@ def adminLogin():
     admin_addr = request.form.get('adminAddress', '').strip().lower()
     password = request.form.get('password', '')
 
-    admin = employeesTable.find_one({
-        "$or": [
-            {"adminAddress": admin_addr},
-            {"adminAddress": {"$regex": f"^{admin_addr}$", "$options": "i"}}
-        ]
-    })
+    admin = None
+    try:
+        admin = employeesTable.find_one({
+            "$or": [
+                {"adminAddress": admin_addr},
+                {"adminAddress": {"$regex": f"^{admin_addr}$", "$options": "i"}}
+            ]
+        })
+    except Exception as db_err:
+        print(f"[Admin DB Warning]: {db_err}")
     if admin and check_password_hash(admin['password'], password):
         session['user_id'] = str(admin['_id'])
         return jsonify({'status': 1, "msg": 'Admin Login Success'})

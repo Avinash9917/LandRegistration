@@ -58,8 +58,45 @@ async function connectToBlockchain() {
     const contractAddress = window.localStorage.Users_ContractAddress;
     const usersContract = new window.web3.eth.Contract(contractABI, contractAddress);
 
-    // Query on-chain user details
-    const userDetails = await usersContract.methods.users(account).call();
+    // Ensure connected to Sepolia network (Chain ID 11155111 / 0xaa36a7)
+    const targetChainId = "0xaa36a7";
+    try {
+      const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+      if (currentChainId !== targetChainId) {
+        try {
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: targetChainId }]
+          });
+        } catch (switchError) {
+          if (switchError.code === 4902) {
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [{
+                chainId: targetChainId,
+                chainName: 'Sepolia Testnet',
+                nativeCurrency: { name: 'Sepolia ETH', symbol: 'ETH', decimals: 18 },
+                rpcUrls: ['https://ethereum-sepolia-rpc.publicnode.com', 'https://1rpc.io/sepolia'],
+                blockExplorerUrls: ['https://sepolia.etherscan.io']
+              }]
+            });
+          }
+        }
+      }
+    } catch (chainErr) {
+      console.warn("Chain switch check warning:", chainErr);
+    }
+
+    // Query on-chain user details with public RPC fallback if MetaMask RPC rate-limits
+    let userDetails = null;
+    try {
+      userDetails = await usersContract.methods.users(account).call();
+    } catch (rpcErr) {
+      console.warn("MetaMask RPC read failed, using public Sepolia RPC fallback:", rpcErr);
+      const fallbackWeb3 = new Web3("https://ethereum-sepolia-rpc.publicnode.com");
+      const fallbackContract = new fallbackWeb3.eth.Contract(contractABI, contractAddress);
+      userDetails = await fallbackContract.methods.users(account).call();
+    }
 
     if (userDetails && userDetails["userID"] && userDetails["userID"].toLowerCase() === account.toLowerCase()) {
       if (loadingTitle) loadingTitle.innerText = "Login Successful!";
