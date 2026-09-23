@@ -1,8 +1,33 @@
 # Land Registration System Using Blockchain
 
+[![Live Citizen Portal](https://img.shields.io/badge/Citizen%20Portal-Live%20on%20Render-brightgreen?style=for-the-badge&logo=render)](https://landreg-citizen-portal.onrender.com)
+[![Live Revenue Portal](https://img.shields.io/badge/Revenue%20Portal-Live%20on%20Render-blue?style=for-the-badge&logo=render)](https://landreg-revenue-portal.onrender.com)
+[![Ethereum Sepolia](https://img.shields.io/badge/Network-Ethereum%20Sepolia-orange?style=for-the-badge&logo=ethereum)](https://sepolia.etherscan.io/)
+
+---
+
+## 🌐 Live Production Portals
+
+| Portal | Live URL | Description |
+| :--- | :--- | :--- |
+| 🧑‍💼 **Citizen Portal** | [https://landreg-citizen-portal.onrender.com](https://landreg-citizen-portal.onrender.com) | User Registration, Property Dashboard, Land Sale/Purchase & Escrow |
+| 🏛️ **Revenue Dept Portal** | [https://landreg-revenue-portal.onrender.com](https://landreg-revenue-portal.onrender.com) | Revenue Officer Inspection, Document Verification & Approvals |
+| 🔑 **Super Admin Console** | [https://landreg-revenue-portal.onrender.com/admin](https://landreg-revenue-portal.onrender.com/admin) | Department & Officer Assignment, System Configuration |
+
+### 📜 Deployed Sepolia Smart Contracts (Chain ID: `11155111`)
+
+| Contract | Sepolia Address | Etherscan Link |
+| :--- | :--- | :--- |
+| **Users** | `0x4bfe5f626253020500633f90bE8532A4B828A713` | [View on Etherscan](https://sepolia.etherscan.io/address/0x4bfe5f626253020500633f90bE8532A4B828A713) |
+| **MockLandRecordsOracle** | `0xC3e8D1455d595163a870411450d39D13A232f2d3` | [View on Etherscan](https://sepolia.etherscan.io/address/0xC3e8D1455d595163a870411450d39D13A232f2d3) |
+| **LandRegistry** | `0x5e4FA345bFd525a8c7C0A0CB2fE0D977a7B6aeD9` | [View on Etherscan](https://sepolia.etherscan.io/address/0x5e4FA345bFd525a8c7C0A0CB2fE0D977a7B6aeD9) |
+| **TransferOwnerShip** | `0x798237e8852aB7BCb52fa48659Ff2409281DB793` | [View on Etherscan](https://sepolia.etherscan.io/address/0x798237e8852aB7BCb52fa48659Ff2409281DB793) |
+
+---
 
 ## Table of Contents
 
+- [Live Production Portals](#-live-production-portals)
 - [About](#About)
    - [Drawbacks of traditional system](#how-it-works)
    - [How it works](#drawbacks-of-the-traditional-system)
