@@ -1,0 +1,153 @@
+{
+  "default_state": "Tamil Nadu",
+  "confidence_thresholds": {
+    "high_confidence_min": 80.0,
+    "fuzzy_match_min_ratio": 0.85
+  },
+  "states": {
+    "Tamil Nadu": {
+      "language_pack": "tam+eng",
+      "revenue_term": "Taluk / Revenue Division",
+      "documents": {
+        "sale_deed": {
+          "code": "DOC_SALE_DEED",
+          "display_name": "Sale Deed (கிரையப் பத்திரம்)",
+          "required_fields": ["owner_name", "buyer_name", "survey_number", "plot_area", "registration_date"],
+          "optional_fields": ["aadhaar_number", "pan_number", "consideration_amount", "document_number"]
+        },
+        "previous_title_deed": {
+          "code": "DOC_PREV_TITLE",
+          "display_name": "Parent Title Deed (தாய் பத்திரம்)",
+          "required_fields": ["previous_owner", "buyer_name", "survey_number", "plot_area", "registration_date"],
+          "optional_fields": ["document_number"]
+        },
+        "patta": {
+          "code": "DOC_PATTA",
+          "display_name": "Patta / Chitta (பட்டா / சிட்டா)",
+          "required_fields": ["patta_number", "landholder_name", "survey_number", "plot_area"],
+          "optional_fields": ["subdivision_number", "taluk_name", "village_name"]
+        },
+        "encumbrance_certificate": {
+          "code": "DOC_EC",
+          "display_name": "Encumbrance Certificate - EC (வில்லங்கச் சான்றிதழ்)",
+          "required_fields": ["survey_number", "period_from", "period_to", "encumbrance_entries"],
+          "optional_fields": ["mortgage_bank", "registered_volume"]
+        },
+        "property_tax_receipt": {
+          "code": "DOC_TAX_RECEIPT",
+          "display_name": "Property Tax Receipt (சொத்து வரி ரசீது)",
+          "required_fields": ["assessment_number", "taxpayer_name", "survey_number", "paid_date", "paid_amount"],
+          "optional_fields": ["financial_year", "receipt_number"]
+        }
+      }
+    },
+    "Karnataka": {
+      "language_pack": "kan+eng",
+      "revenue_term": "Hobli / Taluk",
+      "documents": {
+        "sale_deed": {
+          "code": "DOC_SALE_DEED",
+          "display_name": "Sale Deed (ಕ್ರಯ ಪತ್ರ)",
+          "required_fields": ["owner_name", "buyer_name", "survey_number", "plot_area", "registration_date"],
+          "optional_fields": ["aadhaar_number", "pan_number", "consideration_amount"]
+        },
+        "previous_title_deed": {
+          "code": "DOC_PREV_TITLE",
+          "display_name": "Previous Title Deed (ಹಿಂದಿನ ಹಕ್ಕು ಪತ್ರ)",
+          "required_fields": ["previous_owner", "buyer_name", "survey_number", "plot_area", "registration_date"],
+          "optional_fields": ["document_number"]
+        },
+        "patta": {
+          "code": "DOC_RTC",
+          "display_name": "RTC / Pahani (ಪಹಣಿ / 7-12)",
+          "required_fields": ["patta_number", "landholder_name", "survey_number", "plot_area"],
+          "optional_fields": ["hissa_number", "taluk_name", "village_name"]
+        },
+        "encumbrance_certificate": {
+          "code": "DOC_EC",
+          "display_name": "Encumbrance Certificate - Form 15 (ಬೋಜಾ ಪ್ರಮಾಣ ಪತ್ರ)",
+          "required_fields": ["survey_number", "period_from", "period_to", "encumbrance_entries"],
+          "optional_fields": ["mortgage_bank"]
+        },
+        "property_tax_receipt": {
+          "code": "DOC_TAX_RECEIPT",
+          "display_name": "Property Tax / Khata Receipt (ಆಸ್ತಿ ತೆರಿಗೆ ರಸೀದಿ)",
+          "required_fields": ["assessment_number", "taxpayer_name", "survey_number", "paid_date", "paid_amount"],
+          "optional_fields": ["khata_number", "receipt_number"]
+        }
+      }
+    },
+    "Maharashtra": {
+      "language_pack": "mar+eng",
+      "revenue_term": "Tehsil / Division",
+      "documents": {
+        "sale_deed": {
+          "code": "DOC_SALE_DEED",
+          "display_name": "Sale Deed / Kharedikhat (खरेदीखत)",
+          "required_fields": ["owner_name", "buyer_name", "survey_number", "plot_area", "registration_date"],
+          "optional_fields": ["aadhaar_number", "pan_number"]
+        },
+        "previous_title_deed": {
+          "code": "DOC_PREV_TITLE",
+          "display_name": "Index II / Previous Title (सूची क्र. २)",
+          "required_fields": ["previous_owner", "buyer_name", "survey_number", "plot_area", "registration_date"],
+          "optional_fields": ["document_number"]
+        },
+        "patta": {
+          "code": "DOC_7_12",
+          "display_name": "7/12 Extract - Satbara (७/१२ उतारा)",
+          "required_fields": ["patta_number", "landholder_name", "survey_number", "plot_area"],
+          "optional_fields": ["gat_number", "village_name"]
+        },
+        "encumbrance_certificate": {
+          "code": "DOC_EC",
+          "display_name": "Ferfar / Encumbrance Search (फेरफार व बोजा प्रमाणपत्र)",
+          "required_fields": ["survey_number", "period_from", "period_to", "encumbrance_entries"],
+          "optional_fields": ["mortgage_bank"]
+        },
+        "property_tax_receipt": {
+          "code": "DOC_TAX_RECEIPT",
+          "display_name": "Property Tax Receipt (मालमत्ता कर पावती)",
+          "required_fields": ["assessment_number", "taxpayer_name", "survey_number", "paid_date", "paid_amount"],
+          "optional_fields": ["receipt_number"]
+        }
+      }
+    },
+    "Punjab_Haryana": {
+      "language_pack": "pan+hin+eng",
+      "revenue_term": "Tehsil / District",
+      "documents": {
+        "sale_deed": {
+          "code": "DOC_SALE_DEED",
+          "display_name": "Sale Deed - Wasika (ਬੈਅਨਾਮਾ / वसीका)",
+          "required_fields": ["owner_name", "buyer_name", "survey_number", "plot_area", "registration_date"],
+          "optional_fields": ["aadhaar_number", "pan_number"]
+        },
+        "previous_title_deed": {
+          "code": "DOC_PREV_TITLE",
+          "display_name": "Previous Title Deed (ਪਿਛਲਾ ਦਸਤਾਵੇਜ਼)",
+          "required_fields": ["previous_owner", "buyer_name", "survey_number", "plot_area", "registration_date"],
+          "optional_fields": ["document_number"]
+        },
+        "patta": {
+          "code": "DOC_JAMABANDI",
+          "display_name": "Jamabandi / Fard (ਜਮ੍ਹਾਂਬੰਦੀ / फर्द)",
+          "required_fields": ["patta_number", "landholder_name", "survey_number", "plot_area"],
+          "optional_fields": ["khasra_number", "khewat_number"]
+        },
+        "encumbrance_certificate": {
+          "code": "DOC_EC",
+          "display_name": "Non-Encumbrance Certificate (ਗੈਰ-ਬੋਝ ਸਰਟੀਫਿਕੇਟ)",
+          "required_fields": ["survey_number", "period_from", "period_to", "encumbrance_entries"],
+          "optional_fields": ["mortgage_bank"]
+        },
+        "property_tax_receipt": {
+          "code": "DOC_TAX_RECEIPT",
+          "display_name": "Property Tax Receipt (ਜਾਇਦਾਦ ਟੈਕਸ ਰਸੀਦ)",
+          "required_fields": ["assessment_number", "taxpayer_name", "survey_number", "paid_date", "paid_amount"],
+          "optional_fields": ["receipt_number"]
+        }
+      }
+    }
+  }
+}
