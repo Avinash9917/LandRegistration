@@ -50,10 +50,10 @@ limiter = Limiter(
 
 
 def get_land_registry_contract():
-    contract_path = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
-        "..", "Smart_contracts", "build", "contracts", "LandRegistry.json"
-    )
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    contract_path = os.path.join(base_dir, "contracts", "LandRegistry.json")
+    if not os.path.exists(contract_path):
+        contract_path = os.path.join(base_dir, "..", "Smart_contracts", "build", "contracts", "LandRegistry.json")
     if not os.path.exists(contract_path):
         return None
     with open(contract_path, "r") as f:
@@ -184,7 +184,9 @@ def get_pdf(propertyId):
 @app.route('/fetchContractDetails')
 def fetchContractDetails():
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    contracts_dir = os.path.join(base_dir, "..", "Smart_contracts", "build", "contracts")
+    contracts_dir = os.path.join(base_dir, "contracts")
+    if not os.path.exists(contracts_dir):
+        contracts_dir = os.path.join(base_dir, "..", "Smart_contracts", "build", "contracts")
 
     def load_contract(name):
         path = os.path.join(contracts_dir, f"{name}.json")
