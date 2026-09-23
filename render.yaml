@@ -2,6 +2,7 @@ services:
   - type: web
     name: landreg-citizen-portal
     env: python
+    plan: free
     rootDir: Server_For_Users
     buildCommand: pip install -r ../requirements.txt
     startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
@@ -20,6 +21,7 @@ services:
   - type: web
     name: landreg-revenue-portal
     env: python
+    plan: free
     rootDir: Server_For_Revenue_Dept
     buildCommand: pip install -r ../requirements.txt
     startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
