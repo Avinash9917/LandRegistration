@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: landreg-citizen-portal
+    env: python
+    rootDir: Server_For_Users
+    buildCommand: pip install -r ../requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: MONGO_DB_URL
+        sync: false
+      - key: SECRET_KEY_USER_PORTAL
+        generateValue: true
+      - key: KYC_AES_SECRET_KEY
+        value: LandRegSecureAES256SecretKey32B!
+      - key: AADHAAR_HASH_SALT
+        value: LandRegistryAadhaarSalt2026
+      - key: NETWORK_CHAIN_ID
+        value: 11155111
+
+  - type: web
+    name: landreg-revenue-portal
+    env: python
+    rootDir: Server_For_Revenue_Dept
+    buildCommand: pip install -r ../requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: MONGO_DB_URL
+        sync: false
+      - key: SECRET_KEY_REVENUE_PORTAL
+        generateValue: true
+      - key: ADMIN_WALLET_ADDRESS
+        value: 0x8B6E223052b17033BBC5D4a019f0A48565629e47
+      - key: ADMIN_INITIAL_PASSWORD
+        value: 12345678
+      - key: NETWORK_CHAIN_ID
+        value: 11155111
