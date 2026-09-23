@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revenue Department Portal - LandRegistry GovTech</title>
+
+  <!-- Modern Bootstrap 5 & FontAwesome Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Modern DApp CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/modern_dapp.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/intro_3d.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/creative_effects.css') }}">
+
+  <!-- Core Web3 Scripts -->
+  <script src="{{ url_for('static', filename='js/web3.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/contractsDetails.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/intro_3d.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/creative_effects.js') }}" defer></script>
+</head>
+
+<body class="bg-light">
+
+  <!-- 3D Intro Animation Canvas & Overlay (Phase 8) -->
+  <div id="intro-overlay">
+    <div id="intro-canvas-container"></div>
+    
+    <button id="skipIntroBtn" class="intro-skip-btn" tabindex="0" aria-label="Skip intro animation">
+      Skip Intro <i class="fa-solid fa-forward"></i>
+    </button>
+
+    <div id="introTitleReveal" class="intro-title-reveal">
+      <div class="intro-badge">
+        <i class="fa-solid fa-building-columns me-1"></i> Official Revenue Department
+      </div>
+      <h1>LandRegistry Console</h1>
+      <p>GovTech Authority &bull; Cryptographic Deed Verification</p>
+    </div>
+  </div>
+
+  <!-- Top Navigation -->
+  <nav class="dapp-navbar">
+    <div class="container d-flex justify-content-between align-items-center">
+      <a class="brand" href="/">
+        <i class="fa-solid fa-building-columns text-info"></i>
+        <div>
+          <span>RevenueDept</span><small class="text-white-50 ms-1 fw-light" style="font-size: 0.75rem;">Officer Portal</small>
+        </div>
+      </a>
+      <div class="d-flex align-items-center gap-3">
+        <button onclick="sessionStorage.removeItem('landreg_intro_seen'); window.location.reload();" class="btn btn-sm btn-outline-warning" title="Replay 3D WebGL Car Crash Animation">
+          <i class="fa-solid fa-play me-1"></i> Replay 3D Intro
+        </button>
+        <a href="/admin" class="btn btn-sm btn-outline-warning">
+          <i class="fa-solid fa-user-gear me-1"></i> Admin Console
+        </a>
+        <a href="http://127.0.0.1:5000" target="_blank" class="btn btn-sm btn-outline-info">
+          <i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Citizen Portal
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero-gradient py-5">
+    <div class="container text-center py-4">
+      <div class="badge bg-teal-subtle text-info border border-info-subtle px-3 py-2 rounded-pill mb-3 fw-semibold">
+        <i class="fa-solid fa-stamp me-1"></i> Government Authority & Title Verifier Portal
+      </div>
+      <h1 class="display-5 fw-bold mb-3 text-white">
+        Official Revenue Department<br>
+        <span class="text-info">Land Title Verification Console</span>
+      </h1>
+      <p class="lead text-white-50 mx-auto mb-4" style="max-width: 650px;">
+        Inspect physical survey bounds, verify cryptographic deed anchors, and approve on-chain property registrations.
+      </p>
+
+      <!-- Officer Login Card -->
+      <div class="dapp-card mx-auto p-4 text-start mt-4" style="max-width: 480px;">
+        <h5 class="fw-bold mb-1 text-dark"><i class="fa-solid fa-shield-halved text-success me-2"></i>Officer Authentication</h5>
+        <p class="text-muted small mb-3">Connect your authorized officer wallet and enter credentials.</p>
+
+        <div id="notifyUser" class="alert alert-info py-2 px-3 small" style="display: none;"></div>
+
+        <!-- Step 1: Connect Wallet -->
+        <div id="connectToBlockchainDiv">
+          <button onclick="connectToBlockchain()" class="btn btn-dapp-primary w-100 py-3 justify-content-center fs-6">
+            <i class="fa-solid fa-wallet"></i> Connect Officer Wallet
+          </button>
+        </div>
+
+        <!-- Step 2: Password Form (After Wallet Connected) -->
+        <div id="passwordDiv" style="display: none;">
+          <div class="mb-3">
+            <label class="dapp-label" for="password">Officer Security PIN / Password</label>
+            <input type="password" class="dapp-input" placeholder="Enter PIN / Password" value="12345678" id="password">
+            <small class="text-muted">Default demo PIN: <code>12345678</code></small>
+          </div>
+          <button onclick="login()" class="btn btn-dapp-primary w-100 py-2 justify-content-center">
+            <i class="fa-solid fa-right-to-bracket"></i> Login to Officer Console
+          </button>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top text-muted small">
+          <span><i class="fa-solid fa-gavel me-1"></i> RBAC Enforced</span>
+          <a href="/admin" class="text-decoration-none text-muted"><i class="fa-solid fa-lock me-1"></i> Super Admin Login</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Footer -->
+  <footer class="bg-white border-top py-4 mt-auto">
+    <div class="container text-center text-muted small">
+      &copy; 2026 <strong>Department of Revenue & Land Administration</strong>. Ethereum Blockchain Smart Contract Backbone.
+    </div>
+  </footer>
+
+  <!-- Loading Overlay -->
+  <div id="loadingDiv">
+    <div class="loading-content">
+      <div class="spinner-dapp"></div>
+      <h4 class="fw-bold mb-2">Connecting Officer Wallet</h4>
+      <p class="text-white-50 mb-0">Verifying on-chain officer permissions...</p>
+    </div>
+  </div>
+
+</body>
+
+</html>

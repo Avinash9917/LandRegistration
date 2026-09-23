@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+
+{% block title %}Citizen Dashboard - LandRegistry DApp{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Overview Stats -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3 col-sm-6">
+      <div class="dapp-card stat-card">
+        <div class="stat-icon primary">
+          <i class="fa-solid fa-map-location-dot"></i>
+        </div>
+        <div>
+          <h3 class="fw-bold mb-0" id="statTotalProps">0</h3>
+          <span class="text-muted small">Total Properties</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="dapp-card stat-card">
+        <div class="stat-icon success">
+          <i class="fa-solid fa-certificate"></i>
+        </div>
+        <div>
+          <h3 class="fw-bold mb-0" id="statVerifiedProps">0</h3>
+          <span class="text-muted small">Verified Titles</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="dapp-card stat-card">
+        <div class="stat-icon warning">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+        </div>
+        <div>
+          <h3 class="fw-bold mb-0" id="statPendingProps">0</h3>
+          <span class="text-muted small">Pending Review</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="dapp-card stat-card">
+        <div class="stat-icon danger">
+          <i class="fa-solid fa-tags"></i>
+        </div>
+        <div>
+          <h3 class="fw-bold mb-0" id="statOnSaleProps">0</h3>
+          <span class="text-muted small">Listed on Market</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Properties Table View -->
+  <div id="propertiesTable" class="dapp-card p-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+      <div>
+        <h4 class="fw-bold mb-1"><i class="fa-solid fa-landmark text-primary me-2"></i>My Registered Properties</h4>
+        <p class="text-muted small mb-0">Immutable deed titles and real-time verification status on Ethereum.</p>
+      </div>
+      <button class="btn btn-dapp-primary" onclick="toggleAddProperty()">
+        <i class="fa-solid fa-plus me-1"></i> Add New Property
+      </button>
+    </div>
+
+    <div class="table-responsive">
+      <table class="dapp-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Property ID</th>
+            <th>Location / Zone</th>
+            <th>Revenue Dept</th>
+            <th>Survey No.</th>
+            <th>Area</th>
+            <th>Title Deed</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="propertiesTableBody">
+          <tr>
+            <td colspan="9" class="text-center py-4 text-muted">
+              <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+              Loading your properties from smart contract...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Add Property Form (Hidden by Default) -->
+  <div id="addProperty" class="dapp-card p-4 p-md-5" style="display: none;">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+      <div>
+        <h4 class="fw-bold mb-1"><i class="fa-solid fa-file-circle-plus text-primary me-2"></i>Register New Property Title</h4>
+        <p class="text-muted small mb-0">Anchor deed metadata and cryptographic document hash to the blockchain.</p>
+      </div>
+      <button class="btn btn-sm btn-outline-secondary" onclick="toggleShowProperties()">
+        <i class="fa-solid fa-arrow-left me-1"></i> Back to Dashboard
+      </button>
+    </div>
+
+    <form onsubmit="addProperty(event)">
+      <div class="row g-3">
+        
+        <!-- Revenue Department -->
+        <div class="col-md-6">
+          <label for="revenueDeptId" class="dapp-label">Revenue Dept Code (Jurisdiction ID)</label>
+          <input id="revenueDeptId" type="number" class="dapp-input" placeholder="e.g. 501 (Bangalore Urban)" required>
+        </div>
+
+        <div class="col-md-6">
+          <label for="revenueDepartmentName" class="dapp-label">Revenue Dept Name</label>
+          <input id="revenueDepartmentName" type="text" class="dapp-input" placeholder="e.g. Bangalore Urban North" required>
+        </div>
+
+        <!-- Location -->
+        <div class="col-md-6">
+          <label for="location" class="dapp-label">Location ID</label>
+          <input id="location" type="number" class="dapp-input" placeholder="e.g. 10" required>
+        </div>
+
+        <div class="col-md-6">
+          <label for="locationName" class="dapp-label">Location / Zone Name</label>
+          <input id="locationName" type="text" class="dapp-input" placeholder="e.g. Whitefield Tech Zone" required>
+        </div>
+
+        <!-- Survey Details -->
+        <div class="col-md-6">
+          <label for="suveyNumber" class="dapp-label">Survey Number</label>
+          <input id="suveyNumber" type="number" class="dapp-input" placeholder="e.g. 1001" required>
+        </div>
+
+        <div class="col-md-6">
+          <label for="surveyNumberName" class="dapp-label">Survey Subdivision / Plot Reference</label>
+          <input id="surveyNumberName" type="text" class="dapp-input" placeholder="e.g. Sy. No 1001/2A" required>
+        </div>
+
+        <!-- Area & Document -->
+        <div class="col-md-6">
+          <label for="area" class="dapp-label">Plot Area (sq. ft.)</label>
+          <input id="area" type="number" class="dapp-input" placeholder="e.g. 2400" required>
+        </div>
+
+        <div class="col-md-6">
+          <label for="registrationDoc" class="dapp-label">
+            Title Deed Document <span class="text-muted fw-normal">(PDF format)</span>
+          </label>
+          <input type="file" class="dapp-input" id="registrationDoc" accept="application/pdf" required>
+          <small class="text-muted"><i class="fa-solid fa-shield me-1"></i> Keccak256 hash will be computed client-side.</small>
+        </div>
+
+        <!-- Geo-Location Map Picker (Phase 7) -->
+        <div class="col-12 mt-3">
+          <div class="card p-3 bg-light border">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <label class="dapp-label mb-0 fw-bold"><i class="fa-solid fa-map-location-dot text-primary me-1"></i> Geographic Location & Coordinates (Map-Picker)</label>
+              <button type="button" class="btn btn-sm btn-outline-primary" onclick="lookupGeocodingPreview()">
+                <i class="fa-solid fa-crosshairs me-1"></i> Geocode from Location Name
+              </button>
+            </div>
+            <p class="text-muted small mb-3">Drop and adjust the pin directly on the map. Mandatory user confirmation of the coordinates is required before submission.</p>
+            
+            <div id="registrationMap" style="height: 220px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);" class="mb-3"></div>
+
+            <div class="row g-2 align-items-center">
+              <div class="col-md-5">
+                <div class="input-group input-group-sm">
+                  <span class="input-group-text bg-white">Lat</span>
+                  <input type="number" step="0.000001" id="propLatitude" class="form-control" value="12.9698" required>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="input-group input-group-sm">
+                  <span class="input-group-text bg-white">Lng</span>
+                  <input type="number" step="0.000001" id="propLongitude" class="form-control" value="77.7500" required>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="confirmPinCheck" checked required>
+                  <label class="form-check-label small fw-semibold text-dark" for="confirmPinCheck">Confirm Pin</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 mt-4">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="addTerms" required>
+            <label class="form-check-label text-muted small" for="addTerms">
+              I declare that the survey details and deed document uploaded are genuine and legally valid.
+            </label>
+          </div>
+        </div>
+
+        <div class="col-12 mt-4 d-flex gap-3">
+          <button type="button" class="btn btn-outline-secondary px-4" onclick="toggleShowProperties()">Cancel</button>
+          <button type="submit" class="btn btn-dapp-primary px-5">
+            <i class="fa-solid fa-cloud-arrow-up me-1"></i> Anchor Title On-Chain
+          </button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+</div>
+
+<!-- Price Input Modal -->
+<div id="prompt-container-backcover" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.75); z-index: 9990;">
+  <div class="dapp-card p-4 text-center" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 420px;">
+    <div class="stat-icon primary mx-auto mb-3">
+      <i class="fa-solid fa-tag"></i>
+    </div>
+    <h5 class="fw-bold mb-2">List Property On Sale</h5>
+    <p class="text-muted small mb-3">Enter the listing sale price in Ether (ETH):</p>
+    <div class="input-group mb-3">
+      <input type="number" step="0.01" class="dapp-input text-center fw-bold fs-5" id="prompt-input" placeholder="e.g. 2.5">
+      <span class="input-group-text bg-light fw-bold">ETH</span>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-secondary w-50" id="prompt-cancel">Cancel</button>
+      <button class="btn btn-dapp-primary w-50 justify-content-center" id="prompt-ok">Confirm Listing</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="/js/dashborad.js"></script>
+<script>
+  window.addEventListener('load', () => {
+    checkConnection();
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}Land Marketplace - Available to Buy{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Marketplace Header -->
+  <div class="dapp-card p-4 mb-4">
+    <div class="row align-items-center justify-content-between g-3">
+      <div class="col-md-7">
+        <h3 class="fw-bold mb-1"><i class="fa-solid fa-store text-primary me-2"></i>Land Title Marketplace</h3>
+        <p class="text-muted small mb-0">Browse cryptographically verified land deeds available for purchase on Ethereum.</p>
+      </div>
+      <div class="col-md-5 d-flex justify-content-md-end gap-2 align-items-center">
+        <div class="btn-group btn-group-sm" role="group">
+          <button type="button" class="btn btn-outline-primary active" id="btnListView" onclick="switchMarketplaceView('list')">
+            <i class="fa-solid fa-list me-1"></i> List
+          </button>
+          <button type="button" class="btn btn-outline-primary" id="btnMapView" onclick="switchMarketplaceView('map')">
+            <i class="fa-solid fa-map-location-dot me-1"></i> Map
+          </button>
+        </div>
+
+        <div class="input-group input-group-sm" style="max-width: 200px;">
+          <span class="input-group-text bg-light"><i class="fa-solid fa-magnifying-glass"></i></span>
+          <input type="text" id="searchInput" class="form-control" placeholder="Search..." onkeyup="filterMarketplace()">
+        </div>
+        <button class="btn btn-sm btn-primary d-inline-flex align-items-center gap-1" onclick="fetchPropertiesAvailabletoBuy()">
+          <i class="fa-solid fa-arrows-rotate"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Listings Table (List View) -->
+  <div id="salesTable" class="dapp-card p-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="fw-bold mb-0">Active Properties on Sale</h5>
+    </div>
+
+    <div class="table-responsive">
+      <table class="dapp-table">
+        <thead>
+          <tr>
+            <th>Sale ID</th>
+            <th>Location</th>
+            <th>Survey Reference</th>
+            <th>Plot Area</th>
+            <th>Price</th>
+            <th>Seller</th>
+            <th>Title Deed</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="salesTableBody">
+          <tr>
+            <td colspan="8" class="text-center py-5 text-muted">
+              <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+              Loading active marketplace listings...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Interactive Marketplace Map View (Phase 7) -->
+  <div id="marketplaceMapView" class="dapp-card p-4" style="display: none;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <h5 class="fw-bold mb-0"><i class="fa-solid fa-map-location-dot text-primary me-2"></i>Marketplace Geographic Overview</h5>
+        <small class="text-muted">Interactive parcel markers for all properties currently On Sale. (Parcel-level privacy precision active).</small>
+      </div>
+      <span class="badge bg-info-subtle text-info border"><i class="fa-solid fa-shield me-1"></i> Public Precision Gated</span>
+    </div>
+    <div id="marketplaceMap" style="height: 540px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);"></div>
+  </div>
+
+</div>
+
+<!-- Purchase Offer Modal -->
+<div class="modal fade" id="purchaseOfferModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold"><i class="fa-solid fa-hand-holding-dollar text-primary me-2"></i>Submit Purchase Offer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <input type="hidden" id="modalSaleId">
+        <div class="mb-3">
+          <label class="form-label text-muted small">Property Location</label>
+          <div id="modalLocationName" class="fw-semibold fs-5 text-dark"></div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label text-muted small">Seller's Asking Price</label>
+          <div id="modalAskingPrice" class="fw-bold text-success fs-5"></div>
+        </div>
+        <div class="mb-3">
+          <label for="offerPriceInput" class="form-label fw-semibold">Your Purchase Offer (ETH)</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="fa-brands fa-ethereum"></i></span>
+            <input type="number" step="0.01" min="0.01" class="form-control" id="offerPriceInput" placeholder="e.g. 1.5">
+          </div>
+          <small class="text-muted">The seller will review your offer before escrow acceptance.</small>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-dapp-primary" onclick="submitPurchaseOffer()">
+          <i class="fa-solid fa-paper-plane me-1"></i> Send Offer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="/js/availableToBuy.js"></script>
+<script>
+  window.addEventListener('load', () => {
+    checkConnection();
+  });
+</script>
+{% endblock %}

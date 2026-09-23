@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}My Offers & Escrow Settlement - LandRegistry DApp{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Escrow Header -->
+  <div class="dapp-card p-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h3 class="fw-bold mb-1"><i class="fa-solid fa-handshake-simple text-primary me-2"></i>My Offers & Escrow Settlements</h3>
+        <p class="text-muted small mb-0">Track purchase offers you submitted and complete atomic escrow payments once accepted.</p>
+      </div>
+      <a href="/availableToBuy" class="btn btn-outline-primary">
+        <i class="fa-solid fa-store me-1"></i> Browse Marketplace
+      </a>
+    </div>
+  </div>
+
+  <!-- Offers Table -->
+  <div id="salesTable" class="dapp-card p-4">
+    <div class="table-responsive">
+      <table class="dapp-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Sale ID</th>
+            <th>Property ID</th>
+            <th>Listing Price</th>
+            <th>My Offered Price</th>
+            <th>Escrow Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="salesTableBody">
+          <tr>
+            <td colspan="7" class="text-center py-5 text-muted">
+              <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+              Loading your purchase offers & escrow status...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Counter Offer Modal -->
+<div id="prompt-container-backcover" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.75); z-index: 9990;">
+  <div class="dapp-card p-4 text-center" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 420px;">
+    <div class="stat-icon primary mx-auto mb-3">
+      <i class="fa-solid fa-pen-to-square"></i>
+    </div>
+    <h5 class="fw-bold mb-2">Update Offer Price</h5>
+    <p class="text-muted small mb-3">Enter your new offered price in Ether (ETH):</p>
+    <div class="input-group mb-3">
+      <input type="number" step="0.01" class="dapp-input text-center fw-bold fs-5" id="prompt-input" placeholder="e.g. 2.2">
+      <span class="input-group-text bg-light fw-bold">ETH</span>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-secondary w-50" id="prompt-cancel">Cancel</button>
+      <button class="btn btn-dapp-primary w-50 justify-content-center" id="prompt-ok">Update Offer</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="/js/myRequestedSales.js"></script>
+<script>
+  window.addEventListener('load', () => {
+    checkConnection();
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Officer Dashboard - Revenue Department</title>
+
+  <!-- Modern Bootstrap 5 & FontAwesome Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Modern DApp CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/modern_dapp.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/creative_effects.css') }}">
+
+  <!-- Core Web3 & Effects Scripts -->
+  <script src="{{ url_for('static', filename='js/web3.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/contractsDetails.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/creative_effects.js') }}" defer></script>
+</head>
+
+<body class="bg-light" onload="checkConnection()">
+
+  <!-- Top Navigation Bar -->
+  <nav class="dapp-navbar">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <a class="brand" href="/dashboard">
+        <i class="fa-solid fa-building-columns text-info"></i>
+        <div>
+          <span>RevenueDept</span><small class="text-white-50 ms-1 fw-light" style="font-size: 0.75rem;">Officer Console</small>
+        </div>
+      </a>
+
+      <div class="d-flex align-items-center gap-3">
+        <div class="wallet-badge d-flex align-items-center">
+          <div class="wallet-dot"></div>
+          <span id="nameOfUser" class="fw-semibold text-info me-1">Revenue Officer</span>
+          <span class="badge bg-secondary-subtle text-light border ms-1">Dept #<span id="revenueDeptId">...</span></span>
+        </div>
+
+        <a class="btn btn-sm btn-outline-danger" href="/logout" title="Logout">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Global Alert -->
+  <div class="container mt-3">
+    <div id="notifyUser" class="alert alert-info shadow-sm" style="display: none; border-radius: var(--radius-sm);"></div>
+  </div>
+
+  <!-- Officer Command Dashboard -->
+  <main class="container py-4">
+
+    <!-- Jurisdiction Overview Header -->
+    <div class="dapp-card p-4 mb-4">
+      <div class="row align-items-center justify-content-between g-3">
+        <div class="col-md-7">
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="badge bg-success-subtle text-success border px-2 py-1"><i class="fa-solid fa-shield-check me-1"></i> Authorized Officer Console</span>
+            <span class="text-muted small">Officer Wallet: <code id="officerWalletDisplay" class="text-dark">Connecting...</code></span>
+          </div>
+          <h3 class="fw-bold mb-0">Land Registry Verification Queue</h3>
+          <p class="text-muted small mb-0 mt-1">Real-time incoming title submissions across all revenue jurisdictions.</p>
+        </div>
+        <div class="col-md-5 text-md-end d-flex justify-content-md-end gap-2 align-items-center">
+          <div class="input-group input-group-sm" style="max-width: 240px;">
+            <span class="input-group-text bg-light"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="text" id="searchInput" class="form-control" placeholder="Search location or survey..." onkeyup="filterProperties()">
+          </div>
+          <button class="btn btn-sm btn-primary d-inline-flex align-items-center gap-1" onclick="fetchPropertiesUnderControl()">
+            <i class="fa-solid fa-arrows-rotate"></i> Refresh
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Properties Management Table -->
+    <div class="dapp-card p-4">
+      <div class="table-responsive">
+        <table class="dapp-table">
+          <thead>
+            <tr>
+              <th>Property ID</th>
+              <th>Location</th>
+              <th>Survey Reference</th>
+              <th>Plot Area</th>
+              <th>Deed Inspection</th>
+              <th>Verification State</th>
+              <th>Officer Action</th>
+            </tr>
+          </thead>
+          <tbody id="propertiesTableBody">
+            <tr>
+              <td colspan="7" class="text-center py-5 text-muted">
+                <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                Loading land records for your revenue jurisdiction...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Deed PDF Inspection Modal -->
+  <div class="pdf-popup">
+    <div class="pdf-popup-inner">
+      <div class="pdf-popup-header">
+        <div class="d-flex align-items-center gap-2">
+          <i class="fa-solid fa-file-shield text-info fs-5"></i>
+          <span class="fw-bold">Official Deed Document Review (Cryptographic Integrity Checked)</span>
+        </div>
+        <button class="btn btn-sm btn-outline-light rounded-circle" onclick="closePopup()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="pdf-popup-body">
+        <iframe id="pdf-frame" src=""></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- OCR Cross-Verification & Consistency Audit Modal (Phase 6) -->
+  <div class="modal fade" id="ocrAuditModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content" style="border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+        <div class="modal-header bg-light">
+          <div class="d-flex align-items-center gap-2">
+            <i class="fa-solid fa-file-contract text-primary fs-5"></i>
+            <h5 class="modal-title fw-bold mb-0">Document OCR Cross-Verification Audit</h5>
+            <span id="ocrStatusBadge" class="badge bg-secondary ms-2">Loading...</span>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <input type="hidden" id="ocrModalPropertyId">
+
+          <!-- Audit Summary Banner -->
+          <div id="ocrAuditSummaryBox" class="alert alert-info py-2 px-3 small mb-3">
+            Loading OCR consistency analysis across Sale Deed, Patta, Parent Deed, EC, and Tax Receipt...
+          </div>
+
+          <!-- Cross-Document Comparison Table -->
+          <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-table-columns text-primary me-1"></i> Field-by-Field Consistency Matrix</h6>
+          <div class="table-responsive mb-4">
+            <table class="table table-bordered table-sm align-middle small mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Field</th>
+                  <th>On-Chain / Registry</th>
+                  <th>Sale Deed (OCR)</th>
+                  <th>Patta / RTC (OCR)</th>
+                  <th>Encumbrance Cert</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="ocrComparisonTableBody">
+                <tr><td colspan="6" class="text-center text-muted py-3">Loading matrix...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Active Flags & Discrepancies -->
+          <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-triangle-exclamation text-warning me-1"></i> Discrepancy & Confidence Flags</h6>
+          <div id="ocrFlagsContainer" class="mb-4">
+            <div class="text-muted small">No active flags.</div>
+          </div>
+
+          <!-- Mandatory Officer Resolution Decision Panel -->
+          <div class="card bg-light border-primary p-3">
+            <h6 class="fw-bold text-primary mb-2"><i class="fa-solid fa-gavel me-1"></i> Officer Audit Resolution (Mandatory Before Verification)</h6>
+            <div class="mb-2">
+              <label class="form-label small fw-semibold text-dark">Select Decision Type:</label>
+              <div class="d-flex flex-wrap gap-2">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="officerDecisionType" id="decResolve" value="RESOLVE_ACCEPTABLE" checked>
+                  <label class="form-check-label small text-success fw-semibold" for="decResolve">
+                    <i class="fa-solid fa-circle-check"></i> Resolve — Documents Acceptable
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="officerDecisionType" id="decReupload" value="REQUEST_REUPLOAD">
+                  <label class="form-check-label small text-warning fw-semibold" for="decReupload">
+                    <i class="fa-solid fa-rotate-left"></i> Request Re-Upload
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="officerDecisionType" id="decEscalate" value="ESCALATE">
+                  <label class="form-check-label small text-danger fw-semibold" for="decEscalate">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Escalate to Senior Officer
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="officerReasonInput" class="form-label small fw-semibold text-dark">Official Audit Reason / Notes (Mandatory):</label>
+              <textarea class="form-control form-control-sm" id="officerReasonInput" rows="2" placeholder="State reason for resolving or escalating discrepancy (e.g. Verified with physical revenue volume 102 page 45)..."></textarea>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted"><i class="fa-solid fa-clock-rotate-left me-1"></i> Recorded in immutable MongoDB audit trail.</small>
+              <button class="btn btn-sm btn-primary" onclick="submitOfficerOcrDecision()">
+                <i class="fa-solid fa-floppy-disk me-1"></i> Record Official Decision
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Themed GovTech Loading Overlay (Phase 8) -->
+  <div id="loadingDiv">
+    <div class="loading-content">
+      <div class="themed-loader-box">
+        <div class="themed-plot-graphic">
+          <div class="orbit-ring"><div class="orbit-node"></div></div>
+          <i class="fa-solid fa-building-columns themed-shield-icon"></i>
+        </div>
+      </div>
+      <h4 class="fw-bold mb-2">Processing On-Chain Verification</h4>
+      <p class="text-white-50 mb-0">Signing official title decision with MetaMask...</p>
+    </div>
+  </div>
+
+  <!-- Modern Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

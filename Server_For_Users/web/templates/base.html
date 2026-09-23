@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Land Registry Portal{% endblock %} - Decentralized Title & Deed Platform</title>
+
+  <!-- Modern Bootstrap 5 & FontAwesome Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Modern DApp CSS -->
+  <link rel="stylesheet" href="/css/modern_dapp.css">
+  <link rel="stylesheet" href="/css/creative_effects.css">
+
+  <!-- Leaflet Map CSS & JS (Google Maps Fallback / Display Layer) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Core Web3 & Effects Scripts -->
+  <script src="/js/web3.min.js"></script>
+  <script src="/js/contractsDetails.js"></script>
+  <script src="/js/creative_effects.js" defer></script>
+
+  {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+  <!-- Modern Navigation Bar -->
+  <nav class="dapp-navbar">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <a class="brand" href="/dashboard">
+        <i class="fa-solid fa-cube text-primary"></i>
+        <div>
+          <span>LandRegistry</span><small class="text-white-50 ms-1 fw-light" style="font-size: 0.75rem;">DApp</small>
+        </div>
+      </a>
+
+      <ul class="dapp-nav-links d-none d-md-flex">
+        <li>
+          {% if add_property %}
+          <button class="dapp-nav-link border-0 bg-transparent" id="addPropertyButtonDiv" onclick="toggleAddProperty()">
+            <i class="fa-solid fa-plus-circle"></i> Add Property
+          </button>
+          {% else %}
+          <a class="dapp-nav-link" href="/dashboard">
+            <i class="fa-solid fa-layer-group"></i> My Properties
+          </a>
+          {% endif %}
+        </li>
+        <li>
+          <a class="dapp-nav-link" href="/availableToBuy">
+            <i class="fa-solid fa-store"></i> Marketplace
+          </a>
+        </li>
+        <li>
+          <a class="dapp-nav-link" href="/MySales">
+            <i class="fa-solid fa-tag"></i> Active Listings
+          </a>
+        </li>
+        <li>
+          <a class="dapp-nav-link" href="/myRequestedSales">
+            <i class="fa-solid fa-handshake"></i> Offers & Escrow
+          </a>
+        </li>
+      </ul>
+
+      <div class="d-flex align-items-center gap-3">
+        <!-- Phase 9: SMS Notification Bell Widget -->
+        <div class="dropdown">
+          <button class="btn btn-sm btn-outline-info rounded-circle position-relative" type="button" id="smsBellBtn" data-bs-toggle="modal" data-bs-target="#smsNotificationModal" onclick="loadSmsNotifications()" title="Real-Time SMS Alerts">
+            <i class="fa-solid fa-bell"></i>
+            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" id="smsBadgeDot" style="display: none;">
+              <span class="visually-hidden">New SMS</span>
+            </span>
+          </button>
+        </div>
+
+        <div class="wallet-badge d-flex align-items-center" id="walletBadge">
+          <div class="wallet-dot"></div>
+          <span id="nameOfUser" class="fw-semibold me-1 text-info">Citizen</span>
+          <span id="connectedAccount" class="text-white-50">Connecting...</span>
+        </div>
+
+        <a class="btn btn-sm btn-outline-danger" href="/logout" onclick="logout()" title="Disconnect & Logout">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- SMS Notification History Modal (Phase 9) -->
+  <div class="modal fade" id="smsNotificationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content" style="border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+        <div class="modal-header bg-dark text-white">
+          <div class="d-flex align-items-center gap-2">
+            <i class="fa-solid fa-comment-sms text-info fs-5"></i>
+            <h6 class="modal-title fw-bold mb-0">SMS Notification Center</h6>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-3" style="max-height: 420px; overflow-y: auto;" id="smsModalBody">
+          <div class="text-center py-4 text-muted">
+            <i class="fa-solid fa-spinner fa-spin fs-4 mb-2"></i>
+            <p class="small mb-0">Fetching your registered SMS alerts...</p>
+          </div>
+        </div>
+        <div class="modal-footer bg-light py-2">
+          <small class="text-muted"><i class="fa-solid fa-shield-halved me-1"></i> End-to-end encrypted dispatch to registered mobile.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Alert Bar -->
+  <div class="container mt-3">
+    <div id="notifyUser" class="alert alert-info shadow-sm" style="display: none; border-radius: var(--radius-sm);"></div>
+  </div>
+
+  <!-- Main Content Body -->
+  <main class="flex-grow-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Themed GovTech Transaction Loading Overlay (Phase 8) -->
+  <div id="loadingDiv">
+    <div class="loading-content">
+      <div class="themed-loader-box">
+        <div class="themed-plot-graphic">
+          <div class="orbit-ring"><div class="orbit-node"></div></div>
+          <i class="fa-solid fa-cube themed-shield-icon"></i>
+        </div>
+      </div>
+      <h4 class="fw-bold mb-2">Processing Blockchain Transaction</h4>
+      <p class="text-white-50 mb-0">Please approve the cryptographic signature in your MetaMask wallet...</p>
+    </div>
+  </div>
+
+  <!-- Animated On-Chain Event History Modal (Phase 8) -->
+  <div class="modal fade" id="propertyHistoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content" style="border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+        <div class="modal-header bg-light">
+          <div class="d-flex align-items-center gap-2">
+            <i class="fa-solid fa-timeline text-primary fs-5"></i>
+            <h5 class="modal-title fw-bold mb-0">On-Chain Title Lifecycle & Event History</h5>
+            <span id="historyPropertyBadge" class="badge bg-secondary ms-2">Property #---</span>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <p class="text-muted small mb-3">Live cryptographic lifecycle progression verified across smart contracts and state registries.</p>
+          
+          <div id="historyEventChainContainer"></div>
+
+          <div class="card bg-light p-3 border mt-3 small" id="historyMetaDetails">
+            <div class="row g-2">
+              <div class="col-md-6"><span class="text-muted">Location:</span> <strong id="historyLocation">---</strong></div>
+              <div class="col-md-6"><span class="text-muted">Survey Ref:</span> <strong id="historySurvey">---</strong></div>
+              <div class="col-md-6"><span class="text-muted">Title Area:</span> <strong id="historyArea">---</strong></div>
+              <div class="col-md-6"><span class="text-muted">Current State:</span> <span id="historyStateBadge">---</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Deed PDF Inspection Modal -->
+  <div class="pdf-popup">
+    <div class="pdf-popup-inner">
+      <div class="pdf-popup-header">
+        <div class="d-flex align-items-center gap-2">
+          <i class="fa-solid fa-file-shield text-info fs-5"></i>
+          <span class="fw-bold">Title Deed Document (On-Chain Cryptographic Verification)</span>
+          <span class="badge-status badge-verified ms-2"><i class="fa-solid fa-shield-check"></i> Hash Anchored</span>
+        </div>
+        <button class="btn btn-sm btn-outline-light rounded-circle" onclick="closePopup()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="pdf-popup-body">
+        <iframe id="pdf-frame" src=""></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modern Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    function logout() {
+      localStorage.clear();
+      window.location.href = '/';
+    }
+
+    // Auto-detect MetaMask account switching
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', (accounts) => {
+        if (accounts && accounts.length > 0) {
+          const currentAddr = localStorage.getItem("userAddress");
+          if (currentAddr && currentAddr.toLowerCase() !== accounts[0].toLowerCase()) {
+            localStorage.setItem("userAddress", accounts[0]);
+            window.location.reload();
+          }
+        } else {
+          logout();
+        }
+      });
+    }
+
+    // Phase 9: Real-time SMS Notification Fetcher
+    async function loadSmsNotifications() {
+      const modalBody = document.getElementById("smsModalBody");
+      const account = localStorage.getItem("userAddress");
+      if (!account) return;
+
+      try {
+        const res = await fetch(`/api/notifications/my_sms?walletAddress=${account}`);
+        const data = await res.json();
+
+        if (data.status === 'OK' && data.notifications && data.notifications.length > 0) {
+          let html = '<div class="list-group list-group-flush">';
+          data.notifications.forEach(item => {
+            const timeStr = item.timestamp ? new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recent';
+            html += `
+              <div class="list-group-item px-0 py-2 border-bottom">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <span class="badge bg-success-subtle text-success border small">
+                    <i class="fa-solid fa-signal me-1"></i> SMS ${item.status}
+                  </span>
+                  <small class="text-muted">${timeStr}</small>
+                </div>
+                <p class="mb-1 fw-semibold text-dark small">${item.message}</p>
+                <div class="d-flex justify-content-between align-items-center text-muted" style="font-size: 0.72rem;">
+                  <span><i class="fa-solid fa-mobile-screen me-1"></i> ${item.phone}</span>
+                  ${item.propertyId ? `<span class="badge bg-light text-dark border">Property #${item.propertyId}</span>` : ''}
+                </div>
+              </div>
+            `;
+          });
+          html += '</div>';
+          modalBody.innerHTML = html;
+        } else {
+          modalBody.innerHTML = `
+            <div class="text-center py-4 text-muted">
+              <i class="fa-solid fa-comment-dots fs-2 mb-2 d-block text-muted"></i>
+              <p class="small mb-0">No SMS notifications received yet.<br>You will receive automated alerts when properties are registered, verified, or receive purchase offers.</p>
+            </div>
+          `;
+        }
+      } catch (err) {
+        console.error("Error loading SMS notifications:", err);
+        modalBody.innerHTML = '<p class="text-danger small text-center">Unable to load notifications.</p>';
+      }
+    }
+
+    // Auto-check for new notifications and light up the badge dot
+    setInterval(async () => {
+      const account = localStorage.getItem("userAddress");
+      if (!account) return;
+      try {
+        const res = await fetch(`/api/notifications/my_sms?walletAddress=${account}`);
+        const data = await res.json();
+        const dot = document.getElementById("smsBadgeDot");
+        if (dot && data.status === 'OK' && data.notifications && data.notifications.length > 0) {
+          dot.style.display = 'block';
+        }
+      } catch (e) {}
+    }, 15000);
+  </script>
+
+  {% block extra_scripts %}{% endblock %}
+</body>
+
+</html>
