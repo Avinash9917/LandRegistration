@@ -1,0 +1,287 @@
+{
+  "contractName": "ILandRecordsOracle",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "surveyNumber",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "revenueDeptId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "claimant",
+          "type": "address"
+        }
+      ],
+      "name": "validateSurveyOwnership",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "isValid",
+          "type": "bool"
+        },
+        {
+          "internalType": "string",
+          "name": "message",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.18+commit.87f61d96\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"surveyNumber\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"revenueDeptId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"claimant\",\"type\":\"address\"}],\"name\":\"validateSurveyOwnership\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"isValid\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"message\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Interface for external government land records registry (e.g. Bhoomi, Dharani). Validates survey number ownership before on-chain registration.\",\"kind\":\"dev\",\"methods\":{},\"title\":\"ILandRecordsOracle\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/ILandRecordsOracle.sol\":\"ILandRecordsOracle\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[],\"viaIR\":true},\"sources\":{\"project:/contracts/ILandRecordsOracle.sol\":{\"keccak256\":\"0x5d12ebf6b3575b8ef3fb32aefa2a13d9160cb6abc6b8fa91e576e182994cc54f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://906baaa4a3ed4f9828fd2489bbd0f71d745c0a5e431b66d5e491da19c6adee86\",\"dweb:/ipfs/Qmeing9zXsmDpktAaT624gV3XMUmYkmVp6ec2S3TDCjdGv\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\n/**\n * @title ILandRecordsOracle\n * @dev Interface for external government land records registry (e.g. Bhoomi, Dharani).\n * Validates survey number ownership before on-chain registration.\n */\ninterface ILandRecordsOracle {\n    function validateSurveyOwnership(\n        uint256 surveyNumber,\n        uint256 revenueDeptId,\n        address claimant\n    ) external view returns (bool isValid, string memory message);\n}\n",
+  "sourcePath": "C:\\Users\\avina\\Music\\LandRegistration1\\Smart_contracts\\contracts\\ILandRecordsOracle.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/ILandRecordsOracle.sol",
+    "exportedSymbols": {
+      "ILandRecordsOracle": [
+        1957
+      ]
+    },
+    "id": 1958,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1942,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".22",
+          "<",
+          "0.9",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:32:11"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "ILandRecordsOracle",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 1943,
+          "nodeType": "StructuredDocumentation",
+          "src": "66:191:11",
+          "text": " @title ILandRecordsOracle\n @dev Interface for external government land records registry (e.g. Bhoomi, Dharani).\n Validates survey number ownership before on-chain registration."
+        },
+        "fullyImplemented": false,
+        "id": 1957,
+        "linearizedBaseContracts": [
+          1957
+        ],
+        "name": "ILandRecordsOracle",
+        "nameLocation": "268:18:11",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "functionSelector": "df11c6a8",
+            "id": 1956,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "validateSurveyOwnership",
+            "nameLocation": "302:23:11",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1950,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1945,
+                  "mutability": "mutable",
+                  "name": "surveyNumber",
+                  "nameLocation": "343:12:11",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1956,
+                  "src": "335:20:11",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1944,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "335:7:11",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1947,
+                  "mutability": "mutable",
+                  "name": "revenueDeptId",
+                  "nameLocation": "373:13:11",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1956,
+                  "src": "365:21:11",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1946,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "365:7:11",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1949,
+                  "mutability": "mutable",
+                  "name": "claimant",
+                  "nameLocation": "404:8:11",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1956,
+                  "src": "396:16:11",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1948,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "396:7:11",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "325:93:11"
+            },
+            "returnParameters": {
+              "id": 1955,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1952,
+                  "mutability": "mutable",
+                  "name": "isValid",
+                  "nameLocation": "447:7:11",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1956,
+                  "src": "442:12:11",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 1951,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "442:4:11",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1954,
+                  "mutability": "mutable",
+                  "name": "message",
+                  "nameLocation": "470:7:11",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1956,
+                  "src": "456:21:11",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 1953,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "456:6:11",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "441:37:11"
+            },
+            "scope": 1957,
+            "src": "293:186:11",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 1958,
+        "src": "258:223:11",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:450:11"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.18+commit.87f61d96.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.16",
+  "updatedAt": "2026-09-23T16:42:15.024Z",
+  "devdoc": {
+    "details": "Interface for external government land records registry (e.g. Bhoomi, Dharani). Validates survey number ownership before on-chain registration.",
+    "kind": "dev",
+    "methods": {},
+    "title": "ILandRecordsOracle",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}
